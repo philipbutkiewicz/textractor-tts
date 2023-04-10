@@ -2,7 +2,8 @@
 
 #include "Process.h"
 
-std::string ProcessIDToProcessImageName(std::uint32_t pid) {
+std::string ProcessIDToProcessImageName(std::uint32_t pid)
+{
 
     std::string result = "UNKNOWN";
 

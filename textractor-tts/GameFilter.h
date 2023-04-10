@@ -17,7 +17,8 @@ public:
 	virtual bool CheckProcessId(std::uint32_t pid, std::string targetProcessImageName)
 	{
 		std::string processImageName = ProcessIDToProcessImageName(pid);
-		if (processImageName.find(targetProcessImageName) == std::string::npos) {
+		if (processImageName.find(targetProcessImageName) == std::string::npos)
+		{
 			return FALSE;
 		}
 

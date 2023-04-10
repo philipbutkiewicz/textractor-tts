@@ -25,10 +25,10 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved
 	return TRUE;
 }
 
-
 bool Initialize()
 {
-	if (!InitializeVoice()) {
+	if (!InitializeVoice())
+	{
 		return FALSE;
 	}
 
@@ -37,25 +37,30 @@ bool Initialize()
 	return TRUE;
 }
 
-bool InitializeVoice() {
-	if (spVoice != NULL) {
+bool InitializeVoice()
+{
+	if (spVoice != NULL)
+	{
 		return FALSE;
 	}
 
 	HRESULT hr = CoCreateInstance(CLSID_SpVoice, NULL, CLSCTX_ALL, IID_ISpVoice, (void**)&spVoice);
-	if (!SUCCEEDED(hr)) {
+	if (!SUCCEEDED(hr))
+	{
 		MessageBoxW(NULL, L"COM object failed to initialize!", L"textractor-tts", MB_OK);
 		return FALSE;
 	}
 
 	ISpObjectToken* pVoiceToken = NULL;
 	hr = SpFindBestToken(SPCAT_VOICES, L"Language=411", NULL, &pVoiceToken);
-	if (SUCCEEDED(hr)) {
+	if (SUCCEEDED(hr))
+	{
 		spVoice->SetVoice(pVoiceToken);
 		spVoice->SetVolume(255);
 		pVoiceToken->Release();
 	}
-	else {
+	else
+	{
 		MessageBoxW(NULL, L"Failed to set Japanese voice engine!", L"textractor-tts", MB_OK);
 		return FALSE;
 	}
@@ -69,31 +74,37 @@ void InitializeGameFilters()
 	gameFilters.push_back(gameFilterRewritePlus);
 }
 
-void UninitializeVoice() {
+void UninitializeVoice()
+{
 	spVoice->Release();
 	spVoice = NULL;
 }
 
 bool ProcessSentence(std::wstring& sentence, SentenceInfo sentenceInfo)
 {
-	for (GameFilter* gameFilter : gameFilters) {
+	for (GameFilter* gameFilter : gameFilters)
+	{
 		gameFilter->UpdateFilter(sentence, sentenceInfo);
 	}
 
 	if (sentenceInfo["current select"])
 	{
-		if (spVoice == NULL) {
+		if (spVoice == NULL)
+		{
 			InitializeVoice();
 		}
 
 		bool shouldSpeak = TRUE;
-		for (GameFilter* gameFilter : gameFilters) {
-			if (!gameFilter->GetFilterResult(sentence, sentenceInfo)) {
+		for (GameFilter* gameFilter : gameFilters)
+		{
+			if (!gameFilter->GetFilterResult(sentence, sentenceInfo))
+			{
 				shouldSpeak = FALSE;
 			}
 		}
 
-		if (shouldSpeak) {
+		if (shouldSpeak)
+		{
 			spVoice->Speak(sentence.c_str(), 0, NULL);
 		}
 	}
